@@ -1,0 +1,3 @@
+hat-aio
+hat-util
+pyside2
