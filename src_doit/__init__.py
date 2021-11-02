@@ -1,6 +1,4 @@
 from pathlib import Path
-import subprocess
-import sys
 
 from hat.doit import common
 from hat.doit.py import (build_wheel,
@@ -39,8 +37,6 @@ def task_build():
         build_wheel(
             src_dir=src_py_dir,
             dst_dir=build_py_dir,
-            src_paths=list(common.path_rglob(src_py_dir,
-                                             blacklist={'__pycache__'})),
             name='hat-qt',
             description='Hat Qt utility library',
             url='https://github.com/hat-open/hat-qt',
