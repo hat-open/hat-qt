@@ -8,9 +8,9 @@ import asyncio
 import functools
 import typing
 
-import PySide2.QtCore
-import PySide2.QtWebEngineWidgets
-import PySide2.QtWidgets
+import PySide6.QtCore
+import PySide6.QtWebEngineWidgets
+import PySide6.QtWidgets
 
 from hat import aio
 from hat import util
@@ -34,7 +34,7 @@ def run(async_main: AsyncMain, *args, **kwargs):
         kwargs: aditional keyword arguments passed to `async_main`
 
     """
-    app = PySide2.QtWidgets.QApplication(sys.argv)
+    app = PySide6.QtWidgets.QApplication(sys.argv)
     executor = _QtExecutor()
     async_thread = threading.Thread(target=_run_async_thread,
                                     args=(app, executor, async_main,
@@ -44,7 +44,7 @@ def run(async_main: AsyncMain, *args, **kwargs):
     return app.exec_()
 
 
-class _QtExecutor(PySide2.QtCore.QObject, concurrent.futures.Executor):
+class _QtExecutor(PySide6.QtCore.QObject, concurrent.futures.Executor):
 
     def __init__(self):
         super().__init__()
@@ -56,14 +56,14 @@ class _QtExecutor(PySide2.QtCore.QObject, concurrent.futures.Executor):
             raise RuntimeError()
         f = concurrent.futures.Future()
         self.__queue.put_nowait((f, fn, args, kwargs))
-        PySide2.QtCore.QMetaObject.invokeMethod(
-            self, "_ext_qt_execute", PySide2.QtCore.Qt.QueuedConnection)
+        PySide6.QtCore.QMetaObject.invokeMethod(
+            self, "_ext_qt_execute", PySide6.QtCore.Qt.QueuedConnection)
         return f
 
     def shutdown(self, wait=True):
         self.__closed = True
 
-    @PySide2.QtCore.Slot()
+    @PySide6.QtCore.Slot()
     def _ext_qt_execute(self):
         f, fn, args, kwargs = self.__queue.get()
         try:
